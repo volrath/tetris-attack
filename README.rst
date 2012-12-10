@@ -2,4 +2,4 @@
  Tetris Attack
 ===============
 
-Simple Tetris Attack clone in html5/js
+Simple Tetris Attack clone in html5/js using CreateJS
