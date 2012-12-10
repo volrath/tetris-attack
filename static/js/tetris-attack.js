@@ -16,7 +16,10 @@ require.config({
 });
 
 require(['modules/game', 'easel'], function(game) {
-    createjs.Ticker.addListener(game);
-    createjs.Ticker.useRAF = true;
-    createjs.Ticker.setFPS(36);
+    var preloadAssets = [
+        '/static/images/blocks/green.png',
+        '/static/images/blocks/blue.png',
+        '/static/images/blocks/purple.png'
+    ];
+    game.init(preloadAssets, function () { console.log('loading done.'); });
 });
