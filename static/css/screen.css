@@ -1,0 +1,5 @@
+body { background-color: black }
+
+canvas { background-color: white; width: 300px; height: 550px; position: absolute; top: 50%; left: 50%; margin-top: -275px }
+#blue-player { margin-left: 80px }
+#red-player  { margin-left: -380px }
