@@ -1,6 +1,14 @@
-define(['preloadjs'], function() {
-    var assets = [],
+define(['lodash', 'preloadjs'], function(_) {
+    var assets = {},
         preloadQueue;
+
+    var get = function (key) {
+        if (typeof key !== 'string') return;
+        var img = assets[key];
+        if (!img)
+            throw new Error('Missing "' + key + '", loader.preload() all images before trying to load them.');
+        return _.clone(img);
+    };
 
     var preload = function (manifest, callback) {
         reload(manifest, callback);
@@ -13,7 +21,6 @@ define(['preloadjs'], function() {
 
         var manifestLength = manifest.length;
 
-        // Create a preloader. There is no manfest added to it up-front, we will add items on-demand.
         preloadQueue = new createjs.PreloadJS();
         preloadQueue.onProgress = handlers.overallProgress;
         preloadQueue.onFileProgress = handlers.fileProgress;
@@ -22,9 +29,8 @@ define(['preloadjs'], function() {
 
         preloadQueue.onFileLoad = function (event) {
             handlers.fileLoad(event);
-            if (assets.length == manifestLength && preloadQueue.progress == 1) {
+            if (_.keys(assets).length == manifestLength && preloadQueue.progress == 1)
                 callback();
-            }
         };
     };
 
@@ -38,7 +44,7 @@ define(['preloadjs'], function() {
 
     var handlers = {
         fileLoad: function (event) {
-            assets.push(event.result);
+            assets[event.id] = event.result;
             console.log(event);
         },
 
@@ -54,6 +60,7 @@ define(['preloadjs'], function() {
     };
 
     return {
+        get: get,
         preload: preload
     };
 });
