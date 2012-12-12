@@ -45,7 +45,6 @@ define(['lodash', 'preloadjs'], function(_) {
     var handlers = {
         fileLoad: function (event) {
             assets[event.id] = event.result;
-            console.log(event);
         },
 
         overallProgress: function (event) {
