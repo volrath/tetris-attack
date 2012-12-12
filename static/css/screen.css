@@ -1,5 +1,5 @@
 body { background-color: black }
 
-canvas { background-color: white; width: 300px; height: 550px; position: absolute; top: 50%; left: 50%; margin-top: -275px }
-#blue-player { margin-left: 80px }
-#red-player  { margin-left: -380px }
+canvas { width: 300px; height: 550px; position: absolute; top: 50%; left: 50%; margin-top: -275px; border-width: 1px; border-style: solid }
+#blue-player { border-color: blue; margin-left: -380px }
+#red-player  { border-color: red; margin-left: 80px }
