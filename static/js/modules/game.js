@@ -47,8 +47,8 @@ define(['modules/helpers/loader', 'modules/helpers/events', 'modules/board', 'ea
 //                    console.log("key down")
 //             })
 
-        for (var key in stages)
-            stages[key].update();
+        for (var i in boards)
+            boards[i].update(msDuration);
     };
 
     return {
