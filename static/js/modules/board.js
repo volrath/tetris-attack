@@ -10,7 +10,7 @@ define(['modules/helpers/loader', 'modules/globals', 'alea', 'easel'], function(
         this.matrix      = [];
 
         var innerShadow = new createjs.Graphics();
-        innerShadow.beginLinearGradientFill(["transparent","#000"], [0, 1], 0, 0, 0, 78).drawRect(0, 0, 300, 80);
+        innerShadow.beginLinearGradientFill(["transparent", "#000"], [0, 1], 0, 0, 0, 78).drawRect(0, 0, 300, 80);
 
         var innerShadowShape = new createjs.Shape(innerShadow);
         innerShadowShape.x = 0;
@@ -29,7 +29,7 @@ define(['modules/helpers/loader', 'modules/globals', 'alea', 'easel'], function(
             block;
 
         for (var j = 0; j < this.cols; j++) {
-            color = Math.floor(1 + random() * 4);  // from 1 to 5
+            color = Math.floor(random() * 5);  // from 0 to 4
 
             block = new createjs.Bitmap(loader.get(globals.assets.blocks[color]));
             block.color = color;
