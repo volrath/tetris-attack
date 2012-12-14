@@ -29,7 +29,7 @@ define(['modules/helpers/loader', 'modules/globals', 'alea', 'easel'], function(
             block;
 
         for (var j = 0; j < this.cols; j++) {
-            color = Math.floor(1 + random() * 4);  // from 1 to 5
+            color = Math.floor(random() * 5);  // from 1 to 5
 
             block = new createjs.Bitmap(loader.get(globals.assets.blocks[color]));
             block.color = color;
@@ -38,7 +38,8 @@ define(['modules/helpers/loader', 'modules/globals', 'alea', 'easel'], function(
 
             row.push(block);
             this.stage.addChildAt(block, 0);
-        };
+        }
+        console.log(row);
         return row;
     };
 

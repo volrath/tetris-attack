@@ -40,9 +40,12 @@ define(['modules/helpers/loader', 'modules/helpers/events', 'modules/board', 'ea
     var tick = function (msDuration) {
         //console.info(msDuration);
 
-        // var evs = events.get();
-        // if (evs.length)
-        //     console.log(evs);
+        var evs = events.get();
+//        if (evs.length)
+//            _.each(evs, function(event) {
+//                if (event.type == events.KEY_DOWN)
+//                    console.log("key down")
+//             })
 
         for (var key in stages)
             stages[key].update();

@@ -7,7 +7,8 @@ define([], function() {
                 '/static/images/blocks/purple.png',
                 '/static/images/blocks/red.png',
                 '/static/images/blocks/yellow.png'
-            ]
+            ],
+            handler: '/static/images/handler.png'
         },
         blockSize: 50
     };
