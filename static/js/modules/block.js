@@ -13,6 +13,7 @@ define(['modules/helpers/loader', 'modules/globals', 'easel'], function(loader, 
 
     Block.prototype.onTick = function (msDuration) {
         this.y -= globals.difficulty['easy'].speed;
+        this.alpha = this.y <= 500 ? 1 : 0.3;
     };
 
     return Block;
