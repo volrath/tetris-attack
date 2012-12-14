@@ -44,12 +44,11 @@ define(['lodash', 'modules/block', 'modules/helpers/loader', 'modules/globals', 
         return row;
     };
 
-    Board.prototype.switch = function (cursor) {
-
-    };
-
     Board.prototype.update = function (msDuration) {
+        if (!this.stage.getNumChildren() || this.stage.getChildAt(0).y < 501)
+            this.matrix.unshift(this.newRow());
 
+        this.stage.update();
     };
 
     return Board;

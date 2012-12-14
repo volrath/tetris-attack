@@ -44,8 +44,8 @@ define(['modules/helpers/loader', 'modules/helpers/events', 'modules/board', 'ea
         // if (evs.length)
         //     console.log(evs);
 
-        for (var key in stages)
-            stages[key].update();
+        for (var i in boards)
+            boards[i].update(msDuration);
     };
 
     return {
