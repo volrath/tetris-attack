@@ -1,4 +1,4 @@
-define(['modules/helpers/loader', 'modules/globals', 'alea', 'easel'], function(loader, globals) {
+define(['lodash', 'modules/block', 'modules/helpers/loader', 'modules/globals', 'alea', 'easel'], function(_, Block, loader, globals) {
     var random = new Alea();
 
     var Board = function (stage) {
@@ -19,11 +19,12 @@ define(['modules/helpers/loader', 'modules/globals', 'alea', 'easel'], function(
         this.stage.addChild(innerShadowShape);
 
         for (var i = 0; this.matrix.length < this.initialRows; i++)
-            this.matrix.push(this.newRow(500 - i * globals.blockSize));
+            this.matrix.push(this.newRow(500 - i * globals.blockSize, i));
     };
 
-    Board.prototype.newRow = function (y) {
+    Board.prototype.newRow = function (y, i) {
         y = y || 550;
+        i = i || 0;
         var row = [],
             color,
             block;
@@ -31,10 +32,11 @@ define(['modules/helpers/loader', 'modules/globals', 'alea', 'easel'], function(
         for (var j = 0; j < this.cols; j++) {
             color = Math.floor(random() * 5);  // from 0 to 4
 
-            block = new createjs.Bitmap(loader.get(globals.assets.blocks[color]));
-            block.color = color;
-            block.x = j * globals.blockSize;
-            block.y = y;
+            block = new Block(j * globals.blockSize, y, i, j, color);
+            // block = new createjs.Bitmap(loader.get(globals.assets.blocks[color]));
+            // block.color = color;
+            // block.x = j * globals.blockSize;
+            // block.y = y;
 
             row.push(block);
             this.stage.addChildAt(block, 0);
