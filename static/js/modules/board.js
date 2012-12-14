@@ -1,4 +1,4 @@
-define(['lodash', 'modules/block','modules/controller', 'modules/helpers/loader','modules/helpers/events', 'modules/globals', 'alea', 'easel'], function(_, Block,Controller, loader, events, globals) {
+define(['lodash', 'modules/block', 'modules/controller', 'modules/helpers/loader','modules/helpers/events', 'modules/globals', 'alea', 'easel'], function(_, Block,Controller, loader, events, globals) {
     var random = new Alea();
 
     var Board = function (stage) {
@@ -34,10 +34,6 @@ define(['lodash', 'modules/block','modules/controller', 'modules/helpers/loader'
         for (var j = 0; j < this.cols; j++) {
             color = Math.floor(random() * 5);  // from 0 to 4
             block = new Block(j * globals.blockSize, y, i, j, color);
-            // block = new createjs.Bitmap(loader.get(globals.assets.blocks[color]));
-            // block.color = color;
-            // block.x = j * globals.blockSize;
-            // block.y = y;
 
             row.push(block);
             this.stage.addChildAt(block, 0);
