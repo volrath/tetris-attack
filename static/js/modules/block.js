@@ -12,7 +12,7 @@ define(['modules/helpers/loader', 'modules/globals', 'easel'], function(loader, 
     Block.prototype = new createjs.Bitmap();
 
     Block.prototype.onTick = function (msDuration) {
-        //this.y -= 0.2;
+        this.y -= globals.difficulty['easy'].speed;
     };
 
     return Block;

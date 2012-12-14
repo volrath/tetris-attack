@@ -21,5 +21,6 @@ require.config({
 
 require(['modules/game', 'modules/globals'], function(game, globals) {
     var preloadAssets = globals.assets.blocks.slice(0);
+    preloadAssets.push('/static/images/handler.png');
     game.init(preloadAssets, function () { console.log('loading done.'); });
 });

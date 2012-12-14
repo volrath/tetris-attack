@@ -1,4 +1,4 @@
-define(['lodash', 'modules/block', 'modules/helpers/loader', 'modules/globals', 'alea', 'easel'], function(_, Block, loader, globals) {
+define(['lodash', 'modules/block','modules/controller', 'modules/helpers/loader','modules/helpers/events', 'modules/globals', 'alea', 'easel'], function(_, Block,Controller, loader, events, globals) {
     var random = new Alea();
 
     var Board = function (stage) {
@@ -8,7 +8,9 @@ define(['lodash', 'modules/block', 'modules/helpers/loader', 'modules/globals', 
         this.maxRows     = 12;
         this.cols        = 6;
         this.matrix      = [];
+        this.controller = new Controller();
 
+        this.stage.addChild(this.controller);
         var innerShadow = new createjs.Graphics();
         innerShadow.beginLinearGradientFill(["transparent", "#000"], [0, 1], 0, 0, 0, 78).drawRect(0, 0, 300, 80);
 
@@ -40,7 +42,6 @@ define(['lodash', 'modules/block', 'modules/helpers/loader', 'modules/globals', 
             row.push(block);
             this.stage.addChildAt(block, 0);
         }
-        console.log(row);
         return row;
     };
 
@@ -51,5 +52,8 @@ define(['lodash', 'modules/block', 'modules/helpers/loader', 'modules/globals', 
         this.stage.update();
     };
 
+    Board.prototype.handle = function(event){
+        this.controller.handle(event);
+    };
     return Board;
 });
