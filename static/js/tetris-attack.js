@@ -4,6 +4,7 @@ require.config({
         alea: 'libs/Alea',
         easel: 'libs/createjs/easeljs-0.5.0.min',
         preloadjs: 'libs/createjs/preloadjs-0.2.0.min',
+        tween: 'libs/createjs/tweenjs-0.3.0.min',
         lodash: 'libs/lodash/lodash'
     },
     shim: {
@@ -13,8 +14,11 @@ require.config({
         easel: {
             exports: 'createjs'
         },
-        'preloadjs': {
+        preloadjs: {
             exports: 'createjs.PreloadJS'
+        },
+        tween: {
+            exports: 'createjs.Tween'
         }
     }
 });
