@@ -1,4 +1,4 @@
-define(['lodash', 'modules/block','modules/controller', 'modules/helpers/loader','modules/helpers/events', 'modules/globals', 'alea', 'easel'], function(_, Block,Controller, loader, events, globals) {
+define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','modules/helpers/events', 'modules/globals', 'alea', 'easel'], function(_, Block,Swapper, loader, events, globals) {
     var random = new Alea();
 
     var Board = function (stage) {
@@ -8,9 +8,9 @@ define(['lodash', 'modules/block','modules/controller', 'modules/helpers/loader'
         this.maxRows     = 12;
         this.cols        = 6;
         this.matrix      = [];
-        this.controller = new Controller();
+        this.swapper = new Swapper();
 
-        this.stage.addChild(this.controller);
+        this.stage.addChild(this.swapper);
         var innerShadow = new createjs.Graphics();
         innerShadow.beginLinearGradientFill(["transparent", "#000"], [0, 1], 0, 0, 0, 78).drawRect(0, 0, 300, 80);
 
@@ -22,6 +22,8 @@ define(['lodash', 'modules/block','modules/controller', 'modules/helpers/loader'
 
         for (var i = 0; this.matrix.length < this.initialRows; i++)
             this.matrix.push(this.newRow(500 - i * globals.blockSize, i));
+
+        console.log(this.matrix);
     };
 
     Board.prototype.newRow = function (y, i) {
@@ -53,7 +55,13 @@ define(['lodash', 'modules/block','modules/controller', 'modules/helpers/loader'
     };
 
     Board.prototype.handle = function(event){
-        this.controller.handle(event);
+        this.swapper.handle(event);
+        if (event.key == events.K_SPACE){
+            var objectPoint = this.stage.getObjectsUnderPoint(this.swapper.x+25,this.swapper.y+25);
+            var leftBlock = objectPoint.length > 0 ? objectPoint[0] : false;
+
+        }
+
     };
     return Board;
 });
