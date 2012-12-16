@@ -11,10 +11,10 @@ define([], function() {
             handler: '/static/images/handler.png'
         },
         blockSize: 50,
-        difficulty:{
-            'easy':{'speed':0.1},
-            'normal':{'speed':0.2},
-            'hard':{'speed':0.2}
+        difficulty: {
+            easy: {speed: 0.1},
+            normal: {speed: 0.2},
+            hard: {speed: 0.2}
         }
     };
 });
