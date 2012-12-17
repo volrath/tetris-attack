@@ -12,25 +12,25 @@ define(['modules/helpers/loader','modules/helpers/events','modules/globals', 'ea
         this.moving = true;
         var swapper = this;
         if (movement == 0){
-            createjs.Tween.get(this).to({x: this.x, y: this.y - globals.blocks.size}, 150,createjs.Ease.quartInOut)
+            createjs.Tween.get(this).to({x: this.x, y: this.y - globals.blocks.size}, 150, createjs.Ease.quartInOut)
                 .call(function() {
                     swapper.moving=false;
                 });
         }
         else if(movement == 1){
-            createjs.Tween.get(this).to({x: this.x + globals.blocks.size, y: this.y}, 150,createjs.Ease.quartInOut)
+            createjs.Tween.get(this).to({x: this.x + globals.blocks.size, y: this.y}, 150, createjs.Ease.quartInOut)
                 .call(function() {
                     swapper.moving=false;
                 });
         }
         else if(movement == 2){
-            createjs.Tween.get(this).to({x: this.x, y: this.y + globals.blocks.size}, 150,createjs.Ease.quartInOut)
+            createjs.Tween.get(this).to({x: this.x, y: this.y + globals.blocks.size}, 150, createjs.Ease.quartInOut)
                 .call(function() {
                     swapper.moving=false;
                 });
         }
         else{
-            createjs.Tween.get(this).to({x: this.x - globals.blocks.size, y: this.y}, 150,createjs.Ease.quartInOut)
+            createjs.Tween.get(this).to({x: this.x - globals.blocks.size, y: this.y}, 150, createjs.Ease.quartInOut)
                 .call(function() {
                     swapper.moving=false;
                 });

@@ -21,9 +21,9 @@ define([], function() {
             }
         },
         difficulty: {
-            easy: {speed: 0.1},
-            normal: {speed: 0.2},
-            hard: {speed: 0.2}
+            easy: {speed: 11000},
+            normal: {speed: 9000},
+            hard: {speed: 8000}
         }
     };
 });

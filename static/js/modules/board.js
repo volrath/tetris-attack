@@ -146,7 +146,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         // });
 
         createjs.Tween.get(this.blockContainer, {override: true})
-                      .to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, 3000)
+                      .to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, globals.difficulty.easy.speed)
                       .call(function() {
                           board.moveBlocks();
                       });
