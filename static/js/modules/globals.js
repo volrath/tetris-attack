@@ -10,7 +10,16 @@ define([], function() {
             ],
             handler: '/static/images/handler.png'
         },
-        blockSize: 50,
+        blocks: {
+            size: 50,
+            states: {  // taken from crack-attack's states  -  https://github.com/gnu-lorien/crack-attack/blob/master/src/Block.h
+                static: 0,
+                swapping: 1,
+                falling: 2,
+                dying: 3,
+                awaking: 4
+            }
+        },
         difficulty: {
             easy: {speed: 0.1},
             normal: {speed: 0.2},
