@@ -60,7 +60,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
                 matchCount = 0;
                 for (var k = j+1; k < this.matrix[i].length; k++) {
                     block2 = this.matrix[i][k];
-                    if (block2.isMatchable() && block.color === block2.color) matchCount++;
+                    if (block2 !== null && block2.isMatchable() && block.color === block2.color) matchCount++;
                     else break;
                 }
                 if (matchCount >= 2) {
