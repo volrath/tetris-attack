@@ -30,19 +30,19 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.mG = new createjs.Container();
         this.stage.addChild(this.mG);
 
-        // debug..
-        // var board = this;
-        // do {
-        //     var matched = this.matchingBlocks();
-        //     _.each(matched, function (blockList) {
-        //         _.each(blockList, function (block) {
-        //             board.blockContainer.removeChild(block);
-        //             board.matrix[block.i][block.j] = null;
-        //             delete block;
-        //         });
-        //     });
-        //     this.blocksGravity(0.1);
-        // } while (matched.length != 0);
+        // we remove matched blocks from the random initialization
+        var board = this;
+        do {
+            var matched = this.matchingBlocks();
+            _.each(matched, function (blockList) {
+                _.each(blockList, function (block) {
+                    board.blockContainer.removeChild(block);
+                    board.matrix[block.i][block.j] = null;
+                    delete block;
+                });
+            });
+            this.blocksGravity(false);
+        } while (matched.length != 0);
     };
 
     /*
@@ -182,8 +182,8 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
                 rect.rect(j * globals.blocks.size, i * globals.blocks.size, globals.blocks.size, globals.blocks.size);
                 this.mG.addChild(new createjs.Shape(rect));
                 label = new createjs.Text('(' + i + ', ' + j + ', ' + this.matrix[i][j].color + ')', '10px Arial', 'white');
-                label.x = j * globals.blocks.size + 10;
-                label.y = i * globals.blocks.size + 10;
+                label.x = j * globals.blocks.size + 8;
+                label.y = i * globals.blocks.size + 18;
                 this.mG.addChild(label);
             }
 
