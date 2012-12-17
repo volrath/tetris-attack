@@ -142,12 +142,31 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.stage.update();
     };
 
+    Board.prototype.swapBlocks = function(leftBlock,rightBlock){
+          var temp = this.matrix[leftBlock.i][leftBlock.j];
+          var tmpLeftBlockJ=leftBlock.j;
+          leftBlock.j=rightBlock.j;
+          this.matrix[leftBlock.i][tmpLeftBlockJ] = this.matrix[rightBlock.i][rightBlock.j];
+          this.matrix[rightBlock.i][rightBlock.j] = temp;
+          rightBlock.j=tmpLeftBlockJ;
+          console.log("leftblock:"+leftBlock.j);
+          console.log("rightblock:"+rightBlock.j);
+    };
+
     Board.prototype.handle = function(event){
         this.swapper.handle(event);
         if (event.key == events.K_SPACE){
-            var objectPoint = this.stage.getObjectsUnderPoint(this.swapper.x+25,this.swapper.y+25);
-            var leftBlock = objectPoint.length > 0 ? objectPoint[0] : false;
-
+            var objectPointLeft = this.stage.getObjectsUnderPoint(this.swapper.x+25,this.swapper.y+25);
+            var leftBlock = _.some(objectPointLeft) ? objectPointLeft[0] : false;
+            var objectPointRight = this.stage.getObjectsUnderPoint(this.swapper.x+75,this.swapper.y+25);
+            var rightBlock = _.some(objectPointRight) ? objectPointRight[0] : false;
+            if (leftBlock && rightBlock){
+                this.swapBlocks(leftBlock,rightBlock);
+                createjs.Tween.get(leftBlock)
+                              .to({x: leftBlock.x+globals.blockSize, y:leftBlock.y}, 100);
+                createjs.Tween.get(rightBlock)
+                              .to({x: rightBlock.x-globals.blockSize, y:rightBlock.y}, 100);
+            }
         }
 
     };
