@@ -7,12 +7,13 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.rows        = 11;
         this.cols        = 6;
         this.matrix      = [];
+
         this.blockContainer     = new createjs.Container();
         this.stage.addChild(this.blockContainer);
         this.swapper = new Swapper();
         for (var i = 0; i < this.rows; i++)
             if (i > 5)
-                this.matrix.push(this.newRow(i * globals.blockSize, i));
+                this.matrix.push(this.newRow(i * globals.blocks.size, i));
             else {
                 var newRow = [];
                 while (newRow.push(null) < this.cols);
@@ -90,7 +91,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
     Board.prototype.moveBlocks = function () {
         var board = this;
         if (_.some(this.matrix[0]))
-            console.log('youre losing');
+            console.log("you're losing");
 
         this.matrix.shift();
         this.matrix.push(this.nextRow);
@@ -101,13 +102,14 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
             for (var j = 0; j < this.matrix[i].length; j++)
                 if (this.matrix[i][j] !== null) {
                     this.matrix[i][j].i--;
-                    this.matrix[i][j].y -= globals.blockSize;
+                    this.matrix[i][j].y -= globals.blocks.size;
                 }
         this.blockContainer.y = 0;
 
         // Swapper position is updated
-        this.swapper.y -= globals.blockSize;
+        this.swapper.y -= globals.blocks.size;
         this.blockContainer.setChildIndex(this.swapper,0);
+
         // debug..
         var matched = this.matchingBlocks();
         _.each(matched, function (blockList) {
@@ -115,7 +117,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         });
 
         createjs.Tween.get(this.blockContainer, {override: true})
-                      .to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blockSize}, 7000)
+                      .to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, 3000)
                       .call(function() {
                           board.moveBlocks();
                       });
@@ -130,7 +132,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
 
         for (var j = 0; j < this.cols; j++) {
             color = Math.floor(random() * 5);  // from 0 to 4
-            block = new Block(j * globals.blockSize, y, i, j, color);
+            block = new Block(j * globals.blocks.size, y, i, j, color);
 
             row.push(block);
             this.blockContainer.addChild(block);
@@ -147,9 +149,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         if (event.key == events.K_SPACE){
             var objectPoint = this.stage.getObjectsUnderPoint(this.swapper.x+25,this.swapper.y+25);
             var leftBlock = objectPoint.length > 0 ? objectPoint[0] : false;
-
         }
-
     };
     return Board;
 });
