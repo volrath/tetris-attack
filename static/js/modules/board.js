@@ -26,19 +26,20 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.nextRow = this.newRow();
         this.moveBlocks();
 
-        // we remove matched blocks from the random initialization
         var board = this;
-        do {
-            var matched = this.matchingBlocks();
-            _.each(matched, function (blockList) {
-                _.each(blockList, function (block) {
-                    board.blockContainer.removeChild(block);
-                    board.matrix[block.i][block.j] = null;
-                    delete block;
-                });
-            });
-            this.blocksGravity(false);
-        } while (matched.length != 0);
+
+        // we remove matched blocks from the random initialization
+        // do {
+        //     var matched = this.matchingBlocks();
+        //     _.each(matched, function (blockList) {
+        //         _.each(blockList, function (block) {
+        //             board.blockContainer.removeChild(block);
+        //             board.matrix[block.i][block.j] = null;
+        //             delete block;
+        //         });
+        //     });
+        //     this.blocksGravity(false);
+        // } while (matched.length != 0);
 
         this.containerTween = new createjs.Tween(this.blockContainer, {override: true, loop: true});
         this.containerTween.to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, globals.difficulty.easy.speed)
@@ -146,10 +147,10 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.blockContainer.setChildIndex(this.swapper,0);
 
         // debug..
-        // var matched = this.matchingBlocks();
-        // _.each(matched, function (blockList) {
-        //     _.each(blockList, function (block) { block.matched = true; });
-        // });
+        var matched = this.matchingBlocks();
+        _.each(matched, function (blockList) {
+            _.each(blockList, function (block) { block.matched = true; });
+        });
     };
 
     Board.prototype.newRow = function (y, i) {
@@ -195,6 +196,19 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         if (event.key == events.K_SPACE){
             var objectPoint = this.stage.getObjectsUnderPoint(this.swapper.x+25,this.swapper.y+25);
             var leftBlock = objectPoint.length > 0 ? objectPoint[0] : false;
+        }
+
+        if (event.key === events.K_ENTER) {
+            var board = this;
+            var matched = this.matchingBlocks();
+            _.each(matched, function (blockList) {
+                _.each(blockList, function (block) {
+                    board.blockContainer.removeChild(block);
+                    board.matrix[block.i][block.j] = null;
+                    delete block;
+                });
+            });
+            this.blocksGravity(1000);
         }
     };
     return Board;
