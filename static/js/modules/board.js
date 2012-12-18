@@ -8,7 +8,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.cols        = 6;
         this.matrix      = [];
 
-        this.blockContainer     = new createjs.Container();
+        this.blockContainer = new createjs.Container();
         this.stage.addChild(this.blockContainer);
 
         for (var i = 0; i < this.rows; i++)
@@ -26,23 +26,30 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.nextRow = this.newRow();
         this.moveBlocks();
 
+        var board = this;
+
+        // we remove matched blocks from the random initialization
+        // do {
+        //     var matched = this.matchingBlocks();
+        //     _.each(matched, function (blockList) {
+        //         _.each(blockList, function (block) {
+        //             board.blockContainer.removeChild(block);
+        //             board.matrix[block.i][block.j] = null;
+        //             delete block;
+        //         });
+        //     });
+        //     this.blocksGravity(false);
+        // } while (matched.length != 0);
+
+        this.containerTween = new createjs.Tween(this.blockContainer, {override: true, loop: true});
+        this.containerTween.to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, globals.difficulty.easy.speed)
+                           .call(function() {
+                               board.moveBlocks();
+                           });
+
         // debug...
         this.mG = new createjs.Container();
         this.stage.addChild(this.mG);
-
-        // we remove matched blocks from the random initialization
-        var board = this;
-        do {
-            var matched = this.matchingBlocks();
-            _.each(matched, function (blockList) {
-                _.each(blockList, function (block) {
-                    board.blockContainer.removeChild(block);
-                    board.matrix[block.i][block.j] = null;
-                    delete block;
-                });
-            });
-            this.blocksGravity(false);
-        } while (matched.length != 0);
     };
 
     /*
@@ -141,16 +148,10 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.blockContainer.setChildIndex(this.swapper,0);
 
         // debug..
-        // var matched = this.matchingBlocks();
-        // _.each(matched, function (blockList) {
-        //     _.each(blockList, function (block) { block.matched = true; });
-        // });
-
-        createjs.Tween.get(this.blockContainer, {override: true})
-                      .to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, globals.difficulty.easy.speed)
-                      .call(function() {
-                          board.moveBlocks();
-                      });
+        var matched = this.matchingBlocks();
+        _.each(matched, function (blockList) {
+            _.each(blockList, function (block) { block.matched = true; });
+        });
     };
 
     Board.prototype.newRow = function (y, i) {
@@ -269,6 +270,19 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
                 });
             });
             this.blocksGravity(100);
+        }
+
+        if (event.key === events.K_ENTER) {
+            var board = this;
+            var matched = this.matchingBlocks();
+            _.each(matched, function (blockList) {
+                _.each(blockList, function (block) {
+                    board.blockContainer.removeChild(block);
+                    board.matrix[block.i][block.j] = null;
+                    delete block;
+                });
+            });
+            this.blocksGravity(1000);
         }
     };
     return Board;

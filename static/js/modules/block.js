@@ -18,18 +18,17 @@ define(['modules/helpers/loader', 'modules/globals', 'easel', 'tween'], function
         return true;
     };
 
-    // Block.prototype.p_draw = Block.prototype.draw;
-    // Block.prototype.draw = function (ctx, ignoreCache) {
-    //     var p_draw = this.p_draw(ctx, ignoreCache);
-    //     if (p_draw && this.matched) {
-    //         ctx.beginPath();
-    //         ctx.moveTo(0, 0);
-    //         ctx.lineTo(50, 50);
-    //         ctx.stroke();
-    //         ctx.fillText('(' + this.i + ', ' + this.j + ')', 10, 10);
-    //     }
-    //     return p_draw;
-    // };
+    Block.prototype.p_draw = Block.prototype.draw;
+    Block.prototype.draw = function (ctx, ignoreCache) {
+        var p_draw = this.p_draw(ctx, ignoreCache);
+        if (p_draw && this.matched) {
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(50, 50);
+            ctx.stroke();
+        }
+        return p_draw;
+    };
 
     Block.prototype.fallTo = function (matrix, newI, duration) {
         var block = this,
