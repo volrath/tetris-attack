@@ -137,6 +137,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
 
         // Swapper position is updated
         this.swapper.y -= globals.blocks.size;
+        this.swapper.i--;
         this.blockContainer.setChildIndex(this.swapper,0);
 
         // debug..
@@ -190,31 +191,84 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.stage.update();
     };
 
-    Board.prototype.swapBlocks = function(leftBlock,rightBlock){
-          var temp = this.matrix[leftBlock.i][leftBlock.j];
-          var tmpLeftBlockJ=leftBlock.j;
-          leftBlock.j=rightBlock.j;
-          this.matrix[leftBlock.i][tmpLeftBlockJ] = this.matrix[rightBlock.i][rightBlock.j];
-          this.matrix[rightBlock.i][rightBlock.j] = temp;
-          rightBlock.j=tmpLeftBlockJ;
-          console.log("leftblock:"+leftBlock.j);
-          console.log("rightblock:"+rightBlock.j);
+
+    Board.prototype.swapBlocks = function(){
+          this.swapper.moving=true;
+          var oLeftBlock = this.matrix[this.swapper.i][this.swapper.j];
+          var oRightBlock = this.matrix[this.swapper.i][this.swapper.j+1];
+          var k = this.swapper.i;
+          var swapper = this.swapper;
+          var block = null;
+          var matrix = this.matrix;
+
+          // Case where both block exist inside the swapper
+          if (oLeftBlock !== null && oRightBlock !== null){
+              this.matrix[this.swapper.i][this.swapper.j+1]=this.matrix[this.swapper.i][this.swapper.j];
+              this.matrix[this.swapper.i][this.swapper.j]=oRightBlock;
+              var leftBlock=this.matrix[this.swapper.i][this.swapper.j];
+              leftBlock.j--;
+              createjs.Tween.get(leftBlock)
+                  .to({x: leftBlock.x-globals.blocks.size, y:leftBlock.y}, 100);
+              var rightBlock=this.matrix[this.swapper.i][this.swapper.j+1];
+              rightBlock.j++;
+              createjs.Tween.get(rightBlock)
+                .to({x: rightBlock.x+globals.blocks.size, y:rightBlock.y}, 100);
+          }
+
+          // Case where only left block exists inside the swapper
+          else if (oLeftBlock !== null){
+                // now we search upwards for blocks to fall down.
+                for (k; k <= this.rows - 1; k++) {
+                    block = this.matrix[k][this.swapper.j+1];
+                    if (block !== null){
+                        k--;
+                        break
+                    }
+                }
+                createjs.Tween.get(oLeftBlock)
+                  .to({x: oLeftBlock.x+globals.blocks.size, y:oLeftBlock.y}, 100)
+                    .call(function(){
+                        matrix[swapper.i][swapper.j]=null;
+                        oLeftBlock.j++;
+                        (k !== swapper.i) ? oLeftBlock.fallTo(matrix, k, 100) : matrix[swapper.i][swapper.j+1]=oLeftBlock;
+                    })
+          }
+
+          // Case where only right block exists inside the swapper
+          else if (oRightBlock !== null){
+                // now we search upwards for blocks to fall down.
+                for (k; k <= this.rows - 1; k++) {
+                    block = this.matrix[k][this.swapper.j];
+                    if (block !== null){
+                        k--;
+                        break
+                    }
+                }
+                createjs.Tween.get(oRightBlock)
+                  .to({x: oRightBlock.x-globals.blocks.size, y:oRightBlock.y}, 100)
+                    .call(function(){
+                        matrix[swapper.i][swapper.j+1]=null;
+                        oRightBlock.j--;
+                        (k !== swapper.i) ? oRightBlock.fallTo(matrix, k, 100) : matrix[swapper.i][swapper.j]=oRightBlock;
+                    })
+          }
+          this.swapper.moving=false;
     };
 
     Board.prototype.handle = function(event){
+        var board = this;
         this.swapper.handle(event);
         if (event.key == events.K_SPACE){
-            var objectPointLeft = this.stage.getObjectsUnderPoint(this.swapper.x+25,this.swapper.y+25);
-            var leftBlock = _.some(objectPointLeft) ? objectPointLeft[0] : false;
-            var objectPointRight = this.stage.getObjectsUnderPoint(this.swapper.x+75,this.swapper.y+25);
-            var rightBlock = _.some(objectPointRight) ? objectPointRight[0] : false;
-            if (leftBlock && rightBlock){
-                this.swapBlocks(leftBlock,rightBlock);
-                createjs.Tween.get(leftBlock)
-                              .to({x: leftBlock.x+globals.blockSize, y:leftBlock.y}, 100);
-                createjs.Tween.get(rightBlock)
-                              .to({x: rightBlock.x-globals.blockSize, y:rightBlock.y}, 100);
-            }
+            this.swapBlocks();
+            var matched = this.matchingBlocks();
+            _.each(matched, function (blockList) {
+                _.each(blockList, function (block) {
+                    board.blockContainer.removeChild(block);
+                    board.matrix[block.i][block.j] = null;
+                    delete block;
+                });
+            });
+            this.blocksGravity(100);
         }
     };
     return Board;
