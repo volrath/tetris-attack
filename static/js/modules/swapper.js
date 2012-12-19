@@ -53,7 +53,6 @@ define(['modules/helpers/loader','modules/helpers/events','modules/globals', 'ea
                 this.move(2);
             else if(event.key == events.K_LEFT && this.x != 0)
                 this.move(3);
-            console.log(this.i+":"+this.j);
         }
     };
 
