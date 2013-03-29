@@ -48,7 +48,6 @@ define(['lodash', 'preloadjs'], function(_) {
         },
 
         overallProgress: function (event) {
-            console.log('TOTAL: ' + preloadQueue.progress);
         },
 
         fileProgress: function (event) {},
