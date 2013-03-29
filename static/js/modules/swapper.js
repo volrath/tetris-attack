@@ -56,5 +56,75 @@ define(['modules/helpers/loader','modules/helpers/events','modules/globals', 'ea
         }
     };
 
+    /*
+     * Swap the two positions of the given `board`.
+     */
+    Swapper.prototype.swap = function (board) {
+        this.moving = true;
+
+        var oLeftBlock  = board.matrix[this.i][this.j],
+            oRightBlock = board.matrix[this.i][this.j + 1],
+            swapper = this,
+            k = this.i, block;
+
+        // Case where both block exist inside the swapper
+        if (oLeftBlock !== null && oRightBlock !== null) {
+            board.matrix[this.i][this.j + 1] = oLeftBlock;
+            board.matrix[this.i][this.j] = oRightBlock;
+
+            var leftBlock = board.matrix[this.i][this.j];
+            leftBlock.j--;
+            createjs.Tween.get(leftBlock).to({x: leftBlock.x - globals.blocks.size, y: leftBlock.y}, 100);
+
+            var rightBlock = board.matrix[this.i][this.j + 1];
+            rightBlock.j++;
+            createjs.Tween.get(rightBlock).to({x: rightBlock.x + globals.blocks.size, y: rightBlock.y}, 100);
+        }
+
+        // Case where only left block exists inside the swapper
+        else if (oLeftBlock !== null) {
+            // now we search upwards for blocks to fall down.
+            for (k; k <= board.rows - 1; k++) {
+                block = board.matrix[k][this.j + 1];
+                if (block !== null){
+                    k--;
+                    break;
+                }
+            }
+            createjs.Tween.get(oLeftBlock).to({x: oLeftBlock.x + globals.blocks.size, y: oLeftBlock.y}, 100)
+                .call(function() {
+                    board.matrix[swapper.i][swapper.j] = null;
+                    oLeftBlock.j++;
+                    (k !== swapper.i) ? oLeftBlock.fallTo(board.matrix, k, 100) : board.matrix[swapper.i][swapper.j+1] = oLeftBlock;
+                    if (board.matrix[swapper.i-1][swapper.j] !== null){ // We apply column gravity if the swapped element has blocks above him
+                        board.colGravity(100, swapper.j);
+                    }
+                });
+        }
+
+        // Case where only right block exists inside the swapper
+        else if (oRightBlock !== null){
+            // now we search upwards for blocks to fall down.
+            for (k; k <= board.rows - 1; k++) {
+                block = board.matrix[k][this.j];
+                if (block !== null){
+                    k--;
+                    break;
+                }
+            }
+            createjs.Tween.get(oRightBlock).to({x: oRightBlock.x - globals.blocks.size, y: oRightBlock.y}, 100)
+                .call(function(){
+                    board.matrix[swapper.i][swapper.j+1] = null;
+                    oRightBlock.j--;
+                    (k !== swapper.i) ? oRightBlock.fallTo(board.matrix, k, 100) : board.matrix[swapper.i][swapper.j] = oRightBlock;
+                    if (board.matrix[swapper.i-1][swapper.j+1] !== null) { // We apply column gravity if the swapped element has blocks above him
+                        board.colGravity(100, swapper.j+1);
+                    }
+                });
+        }
+
+        this.moving = false;
+    };
+
     return Swapper;
 });
