@@ -55,6 +55,9 @@ define(['modules/helpers/loader','modules/helpers/events','modules/globals', 'ea
             else if(event.key == events.K_LEFT && this.x != 0)
                 this.move(3);
         }
+
+        if (event.key == events.K_SPACE)
+            this.swap();
     };
 
     /*

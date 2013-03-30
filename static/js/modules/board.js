@@ -213,21 +213,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         var board = this, matched;
         this.swapper.handle(event);
 
-        if (event.key == events.K_SPACE){
-            this.swapper.swap();
-            do {
-                matched = this.matchingBlocks();
-                _.each(matched, function (blockList) {
-                    _.each(blockList, function (block) {
-                        board.blockContainer.removeChild(block);
-                        board.matrix[block.i][block.j] = null;
-                        delete block;
-                    });
-                });
-                this.blocksGravity(false);
-            } while (matched.length != 0);
-        }
-
+        // debug...
         if (event.key === events.K_ENTER) {
             matched = this.matchingBlocks();
             _.each(matched, function (blockList) {
