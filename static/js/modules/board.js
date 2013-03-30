@@ -7,7 +7,8 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.rows        = 11;
         this.cols        = 6;
         this.matrix      = [];
-        this.ceil        = -1;
+        this.ceil        = 0;
+        this.speed       = globals.difficulty.hard.speed;
 
         this.blockContainer = new createjs.Container();
         this.stage.addChild(this.blockContainer);
@@ -25,22 +26,11 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.blockContainer.addChild(this.swapper);
 
         this.nextRow = this.newRow();
-        this.moveBlocks();
 
+        // we start the blockContainer animation
         var board = this;
-
-        // we remove matched blocks from the random initialization
-        do {
-            var matched = this.matchingBlocks();
-            _.each(matched, function (blockList) {
-                _.each(blockList, function (block) {
-                    board.blockContainer.removeChild(block);
-                    board.matrix[block.i][block.j] = null;
-                    delete block;
-                });
-            });
-            this.blocksGravity(false);
-        } while (matched.length != 0);
+        createjs.Tween.get(this.blockContainer).to({x: this.blockContainer.x, y: -globals.blocks.size}, this.speed)
+            .call(function (tween) { board.moveBlocks(); });
 
         // debug...
         this.mG = new createjs.Container();
@@ -149,6 +139,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
 
         this.matrix.push(this.nextRow);
         _.each(this.nextRow, function (block) { block.awake(); });
+
         this.rows++;
         this.nextRow = this.newRow();
 
@@ -157,17 +148,17 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
 
         this.blockContainer.setChildIndex(this.swapper,0);
 
-        var containerTween = new createjs.Tween(this.blockContainer, {override: true, loop: true});
-        containerTween.to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, globals.difficulty.hard.speed)
+        var containerTween = new createjs.Tween(this.blockContainer, {override: true});
+        containerTween.to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, this.speed)
             .call(function(tween) {
                 board.moveBlocks();
             });
 
         // debug..
-        var matched = this.matchingBlocks();
-        _.each(matched, function (blockList) {
-            _.each(blockList, function (block) { block.matched = true; });
-        });
+        // var matched = this.matchingBlocks();
+        // _.each(matched, function (blockList) {
+        //     _.each(blockList, function (block) { block.matched = true; });
+        // });
     };
 
     Board.prototype.newRow = function (i, y) {
@@ -205,6 +196,18 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
                 label.y = (i - this.ceil) * globals.blocks.size + 18;
                 this.mG.addChild(label);
             }
+
+        // matching blocks
+        var board = this,
+            matched = this.matchingBlocks();
+        _.each(matched, function (blockList) {
+            _.each(blockList, function (block) {
+                board.blockContainer.removeChild(block);
+                board.matrix[block.i][block.j] = null;
+                delete block;  // make the block explote!
+            });
+        });
+        this.blocksGravity(1000);
 
         this.stage.update();
     };
