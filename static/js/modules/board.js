@@ -7,6 +7,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.rows        = 11;
         this.cols        = 6;
         this.matrix      = [];
+        this.ceil        = -1;
 
         this.blockContainer = new createjs.Container();
         this.stage.addChild(this.blockContainer);
@@ -41,12 +42,6 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
             this.blocksGravity(false);
         } while (matched.length != 0);
 
-        this.containerTween = new createjs.Tween(this.blockContainer, {override: true, loop: true});
-        this.containerTween.to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, globals.difficulty.easy.speed)
-            .call(function() {
-                board.moveBlocks();
-            });
-
         // debug...
         this.mG = new createjs.Container();
         this.stage.addChild(this.mG);
@@ -58,7 +53,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
     Board.prototype.blocksGravity = function (duration) {
         var space, block;
         for (var j = 0; j < this.cols; j++)
-            for (var i = this.rows - 1; i >= 0; i--) {
+            for (var i = this.rows - 1; i >= this.ceil; i--) {
                 space = this.matrix[i][j];
                 if (space !== null) continue;  // current space is not empty, there's a block
 
@@ -81,7 +76,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
      */
     Board.prototype.colGravity = function (duration, column) {
         var space, block;
-        for (var i = this.rows - 1; i >= 0; i--) {
+        for (var i = this.rows - 1; i >= this.ceil; i--) {
             space = this.matrix[i][column];
             if (space !== null) continue;  // current space is not empty, there's a block
 
@@ -149,26 +144,24 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
 
     Board.prototype.moveBlocks = function () {
         var board = this;
-        if (_.some(this.matrix[0]))
+        if (_.some(this.matrix[this.ceil]))
             console.log("you're losing");
 
-        this.matrix.shift();
         this.matrix.push(this.nextRow);
         _.each(this.nextRow, function (block) { block.awake(); });
+        this.rows++;
         this.nextRow = this.newRow();
 
-        for (var i = 0; i < this.matrix.length; i++)
-            for (var j = 0; j < this.matrix[i].length; j++)
-                if (this.matrix[i][j] !== null) {
-                    this.matrix[i][j].i--;
-                    this.matrix[i][j].y -= globals.blocks.size;
-                }
-        this.blockContainer.y = 0;
+        this.ceil++;
+        this.blockContainer.y = this.ceil * -globals.blocks.size;
 
-        // Swapper position is updated
-        this.swapper.y -= globals.blocks.size;
-        this.swapper.i--;
         this.blockContainer.setChildIndex(this.swapper,0);
+
+        var containerTween = new createjs.Tween(this.blockContainer, {override: true, loop: true});
+        containerTween.to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, globals.difficulty.hard.speed)
+            .call(function(tween) {
+                board.moveBlocks();
+            });
 
         // debug..
         var matched = this.matchingBlocks();
@@ -198,17 +191,17 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         // debug
         this.mG.removeAllChildren();
         var rect, label;
-        for (var i = 0; i < this.rows; i++)
+        for (var i = this.ceil; i < this.rows; i++)
             for(var j = 0; j < this.cols; j++) {
                 if (this.matrix[i][j] === null) continue;
                 rect = new createjs.Graphics();
                 rect.setStrokeStyle(1);
                 rect.beginStroke(createjs.Graphics.getRGB(255, 255, 255));
-                rect.rect(j * globals.blocks.size, i * globals.blocks.size, globals.blocks.size, globals.blocks.size);
+                rect.rect(j * globals.blocks.size, (i - this.ceil) * globals.blocks.size, globals.blocks.size, globals.blocks.size);
                 this.mG.addChild(new createjs.Shape(rect));
                 label = new createjs.Text('(' + i + ', ' + j + ', ' + this.matrix[i][j].color + ')', '10px Arial', 'white');
                 label.x = j * globals.blocks.size + 8;
-                label.y = i * globals.blocks.size + 18;
+                label.y = (i - this.ceil) * globals.blocks.size + 18;
                 this.mG.addChild(label);
             }
 
