@@ -21,7 +21,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
                 this.matrix.push(newRow);
             }
 
-        this.swapper = new Swapper();
+        this.swapper = new Swapper(this);
         this.blockContainer.addChild(this.swapper);
 
         this.nextRow = this.newRow();
@@ -214,7 +214,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.swapper.handle(event);
 
         if (event.key == events.K_SPACE){
-            this.swapper.swap(this);
+            this.swapper.swap();
             do {
                 matched = this.matchingBlocks();
                 _.each(matched, function (blockList) {

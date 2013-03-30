@@ -1,5 +1,6 @@
 define(['modules/helpers/loader','modules/helpers/events','modules/globals', 'easel','tween'], function(loader, events, globals) {
-    var Swapper = function(){
+    var Swapper = function(board){
+        this.board = board;
         this.x = 100; //Initial x position
         this.y = 300; //Initial y position
         this.i = 6;
@@ -57,14 +58,15 @@ define(['modules/helpers/loader','modules/helpers/events','modules/globals', 'ea
     };
 
     /*
-     * Swap the two positions of the given `board`.
+     * Swap the two positions of this -> `board`.
      */
-    Swapper.prototype.swap = function (board) {
+    Swapper.prototype.swap = function () {
         this.moving = true;
 
-        var oLeftBlock  = board.matrix[this.i][this.j],
-            oRightBlock = board.matrix[this.i][this.j + 1],
+        var oLeftBlock  = this.board.matrix[this.i][this.j],
+            oRightBlock = this.board.matrix[this.i][this.j + 1],
             swapper = this,
+            board = this.board,
             k = this.i, block;
 
         // Case where both block exist inside the swapper
