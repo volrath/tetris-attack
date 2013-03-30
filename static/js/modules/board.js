@@ -14,7 +14,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
 
         for (var i = 0; i < this.rows; i++)
             if (i > 5) {
-                this.matrix.push(this.newRow(i * globals.blocks.size, i));
+                this.matrix.push(this.newRow(i, i * globals.blocks.size, true));
             } else {
                 var newRow = [];
                 while (newRow.push(null) < this.cols);
@@ -170,9 +170,10 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         });
     };
 
-    Board.prototype.newRow = function (y, i) {
-        y = y || 550;
+    Board.prototype.newRow = function (i, y) {
         i = i || this.rows;
+        y = y || i * globals.blocks.size;
+
         var row = [],
             color,
             block;
