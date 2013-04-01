@@ -31,7 +31,7 @@ define(['modules/helpers/loader', 'modules/helpers/events', 'modules/board', 'ea
      */
     var start = function () {
         boards.push(new Board(stages.blue));
-        boards.push(new Board(stages.red));
+        // boards.push(new Board(stages.red));
     };
 
     /*

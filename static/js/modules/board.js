@@ -35,6 +35,18 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         // debug...
         this.mG = new createjs.Container();
         this.stage.addChild(this.mG);
+        // console.log('-------------------');
+        // console.log(this.ceil, this.rows, this.matrix.length);
+        // _.each(this.matrix, function (row) {
+        //     console.log(
+        //         row[0] === null ? 'b' : row[0].color,
+        //         row[1] === null ? 'b' : row[1].color,
+        //         row[2] === null ? 'b' : row[2].color,
+        //         row[3] === null ? 'b' : row[3].color,
+        //         row[4] === null ? 'b' : row[4].color,
+        //         row[5] === null ? 'b' : row[5].color
+        //     );
+        // });
     };
 
     /*
@@ -146,18 +158,28 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.ceil++;
         this.blockContainer.y = this.ceil * -globals.blocks.size;
 
-        this.blockContainer.setChildIndex(this.swapper,0);
+        this.blockContainer.setChildIndex(this.swapper, 0);
 
-        var containerTween = new createjs.Tween(this.blockContainer, {override: true});
-        containerTween.to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, this.speed)
-            .call(function(tween) {
-                board.moveBlocks();
-            });
+        new createjs.Tween(this.blockContainer, {override: true})
+            .to({x: this.blockContainer.x, y: this.blockContainer.y - globals.blocks.size}, this.speed)
+            .call(function(tween) { board.moveBlocks(); });
 
         // debug..
         // var matched = this.matchingBlocks();
         // _.each(matched, function (blockList) {
         //     _.each(blockList, function (block) { block.matched = true; });
+        // });
+        // console.log('-------------------');
+        // console.log(this.ceil, this.rows, this.matrix.length);
+        // _.each(this.matrix, function (row) {
+        //     console.log(
+        //         row[0] === null ? 'b' : row[0].color,
+        //         row[1] === null ? 'b' : row[1].color,
+        //         row[2] === null ? 'b' : row[2].color,
+        //         row[3] === null ? 'b' : row[3].color,
+        //         row[4] === null ? 'b' : row[4].color,
+        //         row[5] === null ? 'b' : row[5].color
+        //     );
         // });
     };
 
@@ -205,7 +227,8 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
                 block.explote(board);
             });
         });
-        this.blocksGravity(1000);
+        this.blocksGravity(0);
+
 
         this.stage.update();
     };
@@ -215,17 +238,19 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
         this.swapper.handle(event);
 
         // debug...
-        if (event.key === events.K_ENTER) {
+        if (event.key === events.K_ESC) {
             matched = this.matchingBlocks();
             _.each(matched, function (blockList) {
                 _.each(blockList, function (block) {
-                    board.blockContainer.removeChild(block);
-                    board.matrix[block.i][block.j] = null;
-                    delete block;
+                    block.explote(board);
                 });
             });
             this.blocksGravity(1000);
         }
+        if (event.key === events.K_ENTER) {
+            this.moveBlocks();
+        }
+
     };
     return Board;
 });
