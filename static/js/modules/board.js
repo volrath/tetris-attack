@@ -50,26 +50,11 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
     };
 
     /*
-     * Makes all the 'floating' blocks fall to their lower 'y' point.
+     * Makes all the 'floating' blocks fall to their lower 'y' point using `colGravity`.
      */
     Board.prototype.blocksGravity = function (duration) {
-        var space, block;
         for (var j = 0; j < this.cols; j++)
-            for (var i = this.rows - 1; i >= this.ceil; i--) {
-                space = this.matrix[i][j];
-                if (space !== null) continue;  // current space is not empty, there's a block
-
-                // now we search upwards for blocks to fall down.
-                var d = 0;
-                for (var k = i - 1; k >= 0; k--) {
-                    block = this.matrix[k][j];
-                    if (block !== null && block.state === globals.blocks.states.static) {
-                        block.fallTo(this.matrix, i - d, duration);
-                        d++;
-                    }
-                }
-                break;
-            }
+            this.colGravity(duration, j);
     };
 
 
@@ -94,6 +79,7 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
             break;
         }
     };
+
 
     /*
      * Returns a list of list where every list represents matched blocks in a
