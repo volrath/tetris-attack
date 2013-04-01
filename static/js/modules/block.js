@@ -63,7 +63,7 @@ define(['modules/helpers/loader', 'modules/globals', 'easel', 'tween'], function
     };
 
     Block.prototype.onTick = function (msDuration) {  // this right now is useless, it's here as a proof of concept
-        this.alpha = this.state === globals.blocks.states.awaking ? 0.3 : 1;
+        this.alpha = this.state === globals.blocks.states.awaking ? 0.6 : 1;
     };
 
     return Block;
