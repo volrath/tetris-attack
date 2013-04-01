@@ -197,14 +197,12 @@ define(['lodash', 'modules/block','modules/swapper', 'modules/helpers/loader','m
                 this.mG.addChild(label);
             }
 
-        // matching blocks
         var board = this,
             matched = this.matchingBlocks();
         _.each(matched, function (blockList) {
             _.each(blockList, function (block) {
-                board.blockContainer.removeChild(block);
-                board.matrix[block.i][block.j] = null;
-                delete block;  // make the block explote!
+                // block.matched = true;
+                block.explote(board);
             });
         });
         this.blocksGravity(1000);

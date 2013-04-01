@@ -30,6 +30,12 @@ define(['modules/helpers/loader', 'modules/globals', 'easel', 'tween'], function
         return p_draw;
     };
 
+    Block.prototype.explote = function (board) {
+        board.blockContainer.removeChild(this);
+        board.matrix[this.i][this.j] = null;
+        delete this;
+    };
+
     Block.prototype.fallTo = function (matrix, newI, duration) {
         var block = this,
             position = {
